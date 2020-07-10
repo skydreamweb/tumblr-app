@@ -1,5 +1,6 @@
-const { default: store } = require("..");
-const { NULL } = require("node-sass");
+import api from '../../api/imgur'
+import qs from 'qs'
+
 const state = {
     token: null,
 }
@@ -11,16 +12,24 @@ const getters = {
 };
 
 const actions = {
-    logout: function({ commit }){
-        commit('setToken', null)
+   
+    login: function(){
+        api.login()
+    },
+    finilazeLogin({ commit }, hash){
+       const query = qs.parse(hash.replace('#',""));
+        commit('setToken', query.access_token);
+    },
+    logout: ({ commit }) => {
+        commit('setToken', null) // to call mutation use 'commit'
     }
 }
 
-const mutation = {
-    setToken: function(state, payload){
-        state.token = payload;
+const mutations = {
+    setToken: (state, token) =>{
+        state.token = token;
     }
 };
 
 
-export { state, getters, mutation, actions }
+export default { state, getters, actions, mutations }
